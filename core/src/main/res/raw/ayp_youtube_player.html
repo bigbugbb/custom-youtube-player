@@ -10,41 +10,17 @@
             overflow: hidden;
             position: fixed;
         }
-
-        .frame-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            padding-top: 0px;
-            width: 600%; /* enlarge beyond browser width */
-            left: -250%; /* center */
-        }
-
-        .frame-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .wrapper {
-            overflow: hidden;
-            max-width: 100%;
-        }
     </style>
 
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <script src="https://www.youtube.com/iframe_api"></script>
     </head>
 
     <body>
-        <!-- hide info -->
-        <div class="wrapper">
-            <div class="frame-container">
-                <div id="player"></div>
-            </div>
-        </div>
+        <div id="player"></div>
     </body>
 
     <script type="text/javascript">
@@ -88,6 +64,14 @@
 
     	function sendPlayerStateChange(playerState) {
             clearTimeout(timerId);
+
+            try {
+                var innerDocument = document.getElementById('player').contentWindow.document;
+                innerDocument.getElementsByClassName('ytp-watermark')[0].style.display='none';
+                innerDocument.getElementsByClassName('ytp-show-cards-title')[0].style.display='none';
+                innerDocument.getElementsByClassName('ytp-spinner-container')[0].style.display='none';
+            } catch (error) {
+            }
 
             switch (playerState) {
             	case YT.PlayerState.UNSTARTED:
@@ -173,6 +157,7 @@
         }
 
         <<injectedJavascript>>
+
 
     </script>
 </html>
