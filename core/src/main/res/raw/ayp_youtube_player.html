@@ -10,6 +10,7 @@
             overflow: hidden;
             position: fixed;
         }
+
     </style>
 
     <head>
@@ -62,17 +63,26 @@
     		});
     	}
 
+    	function hideUnusedElements() {
+    	    try {
+                var innerDocument = document.getElementById('player').contentWindow.document;
+                innerDocument.getElementsByClassName('ytp-watermark')[0].style.display = 'none';
+                innerDocument.getElementsByClassName('ytp-show-cards-title')[0].style.display = 'none';
+                innerDocument.getElementsByClassName('ytp-spinner-container')[0].style.display = 'none';
+                innerDocument.getElementsByClassName('ytp-pause-overlay')[0].style.display = 'none';
+                var overlayChildren = innerDocument.getElementsByClassName('ytp-pause-overlay')[0].children;
+                for (var i = 0; i < overlayChildren.length; i++) {
+                    overlayChildren[i].style.display = 'none';
+                }
+            } catch (error) {
+                console.log('hideUnusedElements got error')
+            }
+    	}
+
     	function sendPlayerStateChange(playerState) {
             clearTimeout(timerId);
 
-            try {
-                var innerDocument = document.getElementById('player').contentWindow.document;
-                innerDocument.getElementsByClassName('ytp-watermark')[0].style.display='none';
-                innerDocument.getElementsByClassName('ytp-show-cards-title')[0].style.display='none';
-                innerDocument.getElementsByClassName('ytp-spinner-container')[0].style.display='none';
-                innerDocument.getElementsByClassName('ytp-pause-overlay')[0].style.width='0';
-            } catch (error) {
-            }
+            hideUnusedElements();
 
             switch (playerState) {
             	case YT.PlayerState.UNSTARTED:
@@ -110,14 +120,15 @@
             }
 
             function sendStateChange(newState) {
-                YouTubePlayerBridge.sendStateChange(newState)
+                YouTubePlayerBridge.sendStateChange(newState);
             }
 
             function startSendCurrentTimeInterval() {
                 timerId = setInterval(function() {
-                    YouTubePlayerBridge.sendVideoCurrentTime( player.getCurrentTime() )
-                    YouTubePlayerBridge.sendVideoLoadedFraction( player.getVideoLoadedFraction() )
-                }, 100 );
+                    YouTubePlayerBridge.sendVideoCurrentTime( player.getCurrentTime() );
+                    YouTubePlayerBridge.sendVideoLoadedFraction( player.getVideoLoadedFraction() );
+                    hideUnusedElements();
+                }, 100);
             }
         }
 
@@ -158,7 +169,6 @@
         }
 
         <<injectedJavascript>>
-
 
     </script>
 </html>
