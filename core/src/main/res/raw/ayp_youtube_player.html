@@ -66,13 +66,16 @@
     	function hideUnusedElements() {
     	    try {
                 var innerDocument = document.getElementById('player').contentWindow.document;
-                innerDocument.getElementsByClassName('ytp-watermark')[0].style.display = 'none';
-                innerDocument.getElementsByClassName('ytp-show-cards-title')[0].style.display = 'none';
-                innerDocument.getElementsByClassName('ytp-spinner-container')[0].style.display = 'none';
-                innerDocument.getElementsByClassName('ytp-pause-overlay')[0].style.display = 'none';
+                var elements = [];
+                var elementClassNames = ['ytp-show-cards-title', 'ytp-spinner-container', 'ytp-watermark', 'ytp-pause-overlay'];
+                for (var i = 0; i < elementClassNames.length; i++) {
+                    elements.push(innerDocument.getElementsByClassName(elementClassNames[i])[0]);
+                }
                 var overlayChildren = innerDocument.getElementsByClassName('ytp-pause-overlay')[0].children;
+                elements = elements.concat(overlayChildren);
+
                 for (var i = 0; i < overlayChildren.length; i++) {
-                    overlayChildren[i].style.display = 'none';
+                    elements[i].style.display = 'none';
                 }
             } catch (error) {
                 console.log('hideUnusedElements got error')
@@ -167,6 +170,31 @@
         function setVolume(volumePercent) {
             player.setVolume(volumePercent);
         }
+
+<!--        function getVideoUrl() {-->
+<!--            return document.getElementById('player').contentWindow.document.getElementsByClassName('html5-main-video')[0].src;-->
+<!--        }-->
+
+<!--        function getVideoId(link) {-->
+<!--            const url = new URL(link);-->
+<!--            const searchParams = new URLSearchParams(url.search);-->
+<!--            return searchParams.get('v');-->
+<!--        }-->
+
+<!--        function getRecommendPlaylist() {-->
+<!--            var videoIds = [];-->
+<!--            var iframe = document.getElementById('player');-->
+<!--            var mediaItems = iframe.contentWindow.document.querySelectorAll("a[class='ytp-suggestion-link']");-->
+<!--            for (i=0; i < mediaItems.length; i++) {-->
+<!--                if (mediaItems[i].href) {-->
+<!--                    const videoId = getVideoId(mediaItems[i].href);-->
+<!--                    if (videoId) {-->
+<!--                        videoIds.push(videoId);-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--            return videoIds;-->
+<!--        }-->
 
         <<injectedJavascript>>
 
