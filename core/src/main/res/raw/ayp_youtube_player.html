@@ -37,6 +37,7 @@
     	var player;
 
         var timerId;
+        var timerId2;
 
     	function onYouTubeIframeAPIReady() {
 
@@ -84,8 +85,9 @@
 
     	function sendPlayerStateChange(playerState) {
             clearTimeout(timerId);
+            clearTimeout(timerId2);
 
-            hideUnusedElements();
+            startHideUnusedElements();
 
             switch (playerState) {
             	case YT.PlayerState.UNSTARTED:
@@ -130,8 +132,14 @@
                 timerId = setInterval(function() {
                     YouTubePlayerBridge.sendVideoCurrentTime( player.getCurrentTime() );
                     YouTubePlayerBridge.sendVideoLoadedFraction( player.getVideoLoadedFraction() );
-                    hideUnusedElements();
                 }, 100);
+            }
+
+            function startHideUnusedElements() {
+                hideUnusedElements()
+                timerId2 = setInterval(function() {
+                    hideUnusedElements();
+                }, 200);
             }
         }
 
