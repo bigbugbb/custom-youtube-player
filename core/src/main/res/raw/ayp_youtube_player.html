@@ -79,7 +79,6 @@
                     elements[i].style.display = 'none';
                 }
             } catch (error) {
-                console.log('hideUnusedElements got error')
             }
     	}
 
@@ -87,11 +86,10 @@
             clearTimeout(timerId);
             clearTimeout(timerId2);
 
-            startHideUnusedElements();
-
             switch (playerState) {
             	case YT.PlayerState.UNSTARTED:
                     sendStateChange(UNSTARTED);
+                    startHideUnusedElements();
                     return;
 
             	case YT.PlayerState.ENDED:
@@ -100,21 +98,24 @@
 
                 case YT.PlayerState.PLAYING:
                     sendStateChange(PLAYING);
-                    
                     startSendCurrentTimeInterval();
+                    startHideUnusedElements();
                     sendVideoData(player);
                     return;
 
                 case YT.PlayerState.PAUSED:
                     sendStateChange(PAUSED);
+                    startHideUnusedElements();
                     return;
 
                 case YT.PlayerState.BUFFERING:
                     sendStateChange(BUFFERING);
+                    startHideUnusedElements();
                     return;
 
                 case YT.PlayerState.CUED:
                     sendStateChange(CUED);
+                    startHideUnusedElements();
                     return;
             }
 
